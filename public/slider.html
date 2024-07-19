@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Slider</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+        }
+        .slider-container {
+            width: 80%;
+            max-width: 350px;
+            position: relative;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .slides {
+            display: flex;
+            height: 50%;
+            position: relative;
+        }
+        .slides img {
+            width: 100%;
+            height: 100%; /* Ensure the images fill the container */
+            object-fit: cover; /* Maintain aspect ratio while filling the container */
+            border-radius: 10px 10px 0 0;
+        }
+        .hotspot {
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            background: url('camera-icon.png') no-repeat center center;
+            background-size: cover;
+            cursor: pointer;
+        }
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+            position: absolute;
+            top: 50%;
+            width: 100%;
+            transform: translateY(-50%);
+            pointer-events: none;
+        }
+        .buttons button {
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            pointer-events: all;
+        }
+        .slider-controls {
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: white;
+            border-top: 1px solid #ddd;
+            border-radius: 0 0 10px 10px;
+        }
+        .slider-controls input {
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="slider-container">
+        <div class="slides" id="slides"></div>
+        <div class="buttons">
+            <button onclick="prevSlide()">&#10094;</button>
+            <button onclick="nextSlide()">&#10095;</button>
+        </div>
+        <div class="slider-controls">
+            <input type="range" min="0" max="0" value="0" id="slider" oninput="sliderChange()">
+        </div>
+    </div>
+
+    <script>
+        let images = [];
+        let currentIndex = 0;
+
+        function getUrlSegments() {
+            const pathArray = window.location.pathname.split('/');
+            return {
+                userId: pathArray[pathArray.length - 2],
+                product: pathArray[pathArray.length - 1]
+            };
+        }
+
+        async function fetchImages() {
+            const { userId, product } = getUrlSegments();
+
+            try {
+                const response = await fetch(`http://localhost:3000/slider/${userId}/${product}`);
+                images = await response.json();
+                loadImages();
+                showSlide(currentIndex);
+                document.getElementById('slider').max = images.length - 1;
+            } catch (error) {
+                console.error('Error fetching images:', error);
+            }
+        }
+
+        function loadImages() {
+            const slides = document.getElementById('slides');
+            images.forEach((image, index) => {
+                const img = document.createElement('img');
+                img.src = image.url;
+                slides.appendChild(img);
+
+                // Add hotspots if available
+                if (image.hotspots) {
+                    image.hotspots.forEach((hotspot) => {
+                        const hotspotElement = document.createElement('div');
+                        hotspotElement.className = 'hotspot';
+                        hotspotElement.style.left = `${hotspot.position.x}px`;
+                        hotspotElement.style.top = `${hotspot.position.y}px`;
+                        hotspotElement.onclick = () => window.open(hotspot.hotspotImageUrl, '_blank');
+                        img.parentElement.appendChild(hotspotElement);
+                    });
+                }
+            });
+        }
+
+        function showSlide(index) {
+            const slides = document.getElementById('slides');
+            const totalSlides = images.length;
+            if (index >= totalSlides) {
+                currentIndex = 0;
+            } else if (index < 0) {
+                currentIndex = totalSlides - 1;
+            } else {
+                currentIndex = index;
+            }
+            slides.style.transform = `translateX(-${currentIndex * 100}%)`;
+            slides.style.transition = 'none'; // Remove transition effect
+            document.getElementById('slider').value = currentIndex;
+        }
+
+        function nextSlide() {
+            showSlide(currentIndex + 1);
+        }
+
+        function prevSlide() {
+            showSlide(currentIndex - 1);
+        }
+
+        function sliderChange() {
+            const sliderValue = document.getElementById('slider').value;
+            showSlide(parseInt(sliderValue));
+        }
+
+        fetchImages();
+    </script>
+</body>
+</html>
