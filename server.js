@@ -4,10 +4,8 @@ const path = require('path');
 const { firestore, bucket } = require('./firebase');
 const app = express();
 const port = 3000;
-const allowedOrigins = ['http://3.112.221.212:3000', 'http://localhost:3000'];
-app.use(cors({
-    origin: 'http://3.112.221.212:3000'
-}));
+
+app.use(cors());
 app.use(express.static('public'));
 
 // Route to get slider images

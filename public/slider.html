@@ -101,7 +101,7 @@
             const { userId, product } = getUrlSegments();
 
             try {
-                const response = await fetch(`http://3.112.221.212:3000/slider/${userId}/${product}`);
+                const response = await fetch(`http://localhost:3000/slider/${userId}/${product}`);
                 images = await response.json();
                 loadImages();
                 showSlide(currentIndex);
