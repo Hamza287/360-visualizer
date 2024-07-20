@@ -5,7 +5,9 @@ const { firestore, bucket } = require('./firebase');
 const app = express();
 const port = 3000;
 
-app.use(cors());
+app.use(cors({
+    origin: '*'
+}));
 app.use(express.static('public'));
 
 // Route to get slider images
@@ -50,6 +52,7 @@ app.get('/sliderPage/:userId/:product', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'slider.html'));
 });
 
-app.listen(port, () => {
-    console.log(`Server running at http://localhost:${port}`);
+// Bind to 0.0.0.0 to make the server accessible externally
+app.listen(port, '0.0.0.0', () => {
+    console.log(`Server running at http://0.0.0.0:${port}`);
 });
