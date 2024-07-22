@@ -141,8 +141,8 @@
                         hotspotElement.style.left = `${hotspot.position.x}px`;
                         hotspotElement.style.top = `${hotspot.position.y}px`;
                         hotspotElement.style.background = 'red';  // Add this line to set the color
-                        // hotspotElement.style.borderRadius = '50%';  // Optional: Make it circular
-                        hotspotElement.onclick = () => window.open(hotspot.url, '_blank');
+                        hotspotElement.style.borderRadius = '50%';  // Optional: Make it circular
+                        hotspotElement.onclick = () => window.open(hotspot.hotspotImageUrl, '_blank');
                         slides.appendChild(hotspotElement);
                     });
                 }
