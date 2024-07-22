@@ -18,7 +18,7 @@ app.get('/slider/:userId/:product', async (req, res) => {
         const doc = await docRef.get();
 
         if (!doc.exists) {
-            return res.status(404).send('No images found for this user.');
+            return res.status(404).send('No images found for this user.'); njn
         }
 
         const data = doc.data();
