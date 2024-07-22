@@ -18,8 +18,7 @@
 
         .slider-container {
             width: 80%;
-            max-width: 230px;
-            max-height: 500px;
+            max-width: 350px;
             position: relative;
             background-color: white;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -46,7 +45,7 @@
             position: absolute;
             width: 24px;
             height: 24px;
-            /* background: url('red-camera-icon.png') no-repeat center center; */
+            background: url('red-camera-icon.png') no-repeat center center;
             background-size: cover;
             cursor: pointer;
         }
@@ -141,14 +140,9 @@
                         hotspotElement.className = 'hotspot';
                         hotspotElement.style.left = `${hotspot.position.x}px`;
                         hotspotElement.style.top = `${hotspot.position.y}px`;
-                        const iconImg = document.createElement('img');
-                        iconImg.src = 'camicon.png'; // Make sure this path is correct
-                        // iconImg.style.width = '100%';
-                        // iconImg.style.height = '100%';
-                        hotspotElement.appendChild(iconImg);
-                        // hotspotElement.style.background = 'red';  // Add this line to set the color
+                        hotspotElement.style.background = 'red';  // Add this line to set the color
                         // hotspotElement.style.borderRadius = '50%';  // Optional: Make it circular
-                        hotspotElement.onclick = () => window.open(hotspot.hotspotImageUrl, '_blank');
+                        hotspotElement.onclick = () => window.open(hotspot.url, '_blank');
                         slides.appendChild(hotspotElement);
                     });
                 }
